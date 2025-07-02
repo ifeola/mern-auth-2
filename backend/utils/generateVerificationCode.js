@@ -1,3 +1,6 @@
 export const generateVerificationCode = () => {
-	return Math.floor(10000 + Math.random() * 900000).toString();
+	const verificationCode = Math.floor(
+		10000 + Math.random() * 900000
+	).toString();
+	return verificationCode;
 };

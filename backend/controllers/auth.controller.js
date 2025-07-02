@@ -5,7 +5,8 @@ import { generateVerificationCode } from "../utils/generateVerificationCode.js";
 export const signup = async (request, response) => {
 	const { email, name, password } = request.body;
 	try {
-		if (!email || !password || name) throw new Error("All fields are required");
+		if (!email || !password || !name)
+			throw new Error("All fields are required");
 		const userAlreadyExits = await User.findOne({ email });
 		if (userAlreadyExits)
 			return response
@@ -22,9 +23,19 @@ export const signup = async (request, response) => {
 			verificationTokenExpiredAt: Date.now() * 24 * 60 * 60 * 1000,
 		});
 
-    await user.save();
-    
-    generateTokeAndSetCookie(response, user._id)
+		await user.save();
+
+		// Generate user Token
+		generateTokeAndSetCookie(response, user._id);
+
+		response.status(201).json({
+			success: true,
+			message: "User created successfully",
+			user: {
+				...user._doc,
+				password: undefined,
+			},
+		});
 	} catch (error) {
 		return response
 			.status(400)
