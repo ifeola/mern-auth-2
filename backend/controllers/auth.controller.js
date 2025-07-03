@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import { generateVerificationCode } from "../utils/generateVerificationCode.js";
+import { generateTokeAndSetCookie } from "../utils/generateTokeAndSetCookie.js";
 
 export const signup = async (request, response) => {
 	const { email, name, password } = request.body;
@@ -20,7 +21,7 @@ export const signup = async (request, response) => {
 			password: hashPassword,
 			name,
 			verificationToken,
-			verificationTokenExpiredAt: Date.now() * 24 * 60 * 60 * 1000,
+			verificationTokenExpiredAt: Date.now() + 24 * 60 * 60 * 1000,
 		});
 
 		await user.save();
